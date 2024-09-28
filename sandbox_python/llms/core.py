@@ -29,12 +29,15 @@ def get_retriever(
     embedding: Embeddings,
     collection_name: str,
     persist_directory: str,
+    k: int,
 ) -> VectorStoreRetriever:
     return Chroma(
         collection_name=collection_name,
         persist_directory=persist_directory,
         embedding_function=embedding,
-    ).as_retriever()
+    ).as_retriever(
+        search_kwargs={"k": k},
+    )
 
 
 def get_text_splitter() -> TextSplitter:
