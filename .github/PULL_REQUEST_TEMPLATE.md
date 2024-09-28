@@ -43,7 +43,7 @@ What kind of change does this Pull Request introduce?
 
 ```
 git clone git@github.com:ks6088ts-labs/sandbox-python.git
-cd template-python
+cd sandbox-python
 ```
 
 - Test the code

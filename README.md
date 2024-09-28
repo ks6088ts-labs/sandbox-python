@@ -3,7 +3,7 @@
 [![docker-release](https://github.com/ks6088ts-labs/sandbox-python/actions/workflows/docker-release.yaml/badge.svg)](https://github.com/ks6088ts-labs/sandbox-python/actions/workflows/docker-release.yaml)
 [![ghcr-release](https://github.com/ks6088ts-labs/sandbox-python/actions/workflows/ghcr-release.yaml/badge.svg)](https://github.com/ks6088ts-labs/sandbox-python/actions/workflows/ghcr-release.yaml)
 
-# template-python
+# sandbox-python
 
 This is a template repository for Python
 
