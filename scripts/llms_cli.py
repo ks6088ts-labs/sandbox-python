@@ -7,10 +7,12 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../")
 from logging import getLogger
 
 import typer
+from dotenv import load_dotenv
 from langchain_core.documents import Document
 
 from sandbox_python.llms import core
-from sandbox_python.llms.chains.generation import generation_chain
+from sandbox_python.llms.chains.core import rag_chain
+from sandbox_python.llms.graphs.core import get_graph
 from sandbox_python.llms.tools.bing_search import get_bing_search_tool
 
 app = typer.Typer()
@@ -25,7 +27,7 @@ def create_vector_store(
     ],
     collection_name="rag-chroma",
     persist_directory="./.chroma",
-    verbose: bool = True,
+    verbose: bool = typer.Option(False, help="Verbose mode."),
 ):
     if verbose:
         import logging
@@ -53,7 +55,8 @@ def search(
     query: str = "天は人の上に人を造らず人の下に人を造らず",
     collection_name="rag-chroma",
     persist_directory="./.chroma",
-    verbose: bool = False,
+    k=3,
+    verbose: bool = typer.Option(False, help="Verbose mode."),
 ):
     if verbose:
         import logging
@@ -64,7 +67,7 @@ def search(
         embedding=core.get_embedding(),
         collection_name=collection_name,
         persist_directory=persist_directory,
-        k=3,
+        k=k,
     ).invoke(query)
 
     print(f"got {len(got_documents)} documents")
@@ -77,8 +80,8 @@ def search(
 @app.command()
 def bing_search(
     query: str = "GitHub",
-    k: int = 3,
-    verbose: bool = False,
+    k=3,
+    verbose: bool = typer.Option(False, help="Verbose mode."),
 ):
     if verbose:
         import logging
@@ -102,7 +105,8 @@ def rag(
     question="初版の発行日と出版社を教えてください。",
     vector_store=True,
     bing_search=True,
-    verbose=False,
+    k=3,
+    verbose: bool = typer.Option(False, help="Verbose mode."),
 ):
     if verbose:
         import logging
@@ -115,12 +119,12 @@ def rag(
             embedding=core.get_embedding(),
             collection_name="rag-chroma",
             persist_directory="./.chroma",
-            k=1,
+            k=k,
         ).invoke(question)
         documents.extend(got_documents)
 
     if bing_search:
-        got_documents_str = get_bing_search_tool(k=2).invoke(
+        got_documents_str = get_bing_search_tool(k=k).invoke(
             {
                 "query": question,
             }
@@ -133,7 +137,7 @@ def rag(
         print(f"{idx+1} =============")
         pprint(document)
 
-    generation = generation_chain.invoke(
+    generation = rag_chain.invoke(
         {
             "context": documents,
             "question": question,
@@ -144,5 +148,38 @@ def rag(
     pprint(generation)
 
 
+@app.command()
+def agent(
+    question="初版の発行日と出版社を教えてください。",
+    output_mermaid_png=None,
+    k=3,
+    verbose: bool = typer.Option(False, help="Verbose mode."),
+):
+    if verbose:
+        import logging
+
+        logging.basicConfig(level=logging.DEBUG)
+
+    graph = get_graph()
+    graph.get_graph().draw_mermaid_png(output_file_path=output_mermaid_png)
+
+    for output in graph.stream(
+        {
+            "question": question,
+            "k": k,
+        },
+        config={
+            "configurable": {
+                "thread_id": "2",
+            }
+        },
+    ):
+        for key, value in output.items():
+            pprint(f"Finished running: {key}:")
+    pprint(value["generation"])
+
+
 if __name__ == "__main__":
+    load_dotenv()
+
     app()
