@@ -1,19 +1,26 @@
 from logging import getLogger
 from os import getenv
 
-from dotenv import load_dotenv
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_chroma import Chroma
 from langchain_community.document_loaders import WebBaseLoader
 from langchain_core.documents import Document
 from langchain_core.embeddings import Embeddings
 from langchain_core.vectorstores import VectorStore, VectorStoreRetriever
-from langchain_openai import AzureOpenAIEmbeddings
+from langchain_openai import AzureChatOpenAI, AzureOpenAIEmbeddings
 from langchain_text_splitters.base import TextSplitter
 
-load_dotenv()
-
 logger = getLogger(__name__)
+
+
+def get_chat_model():
+    return AzureChatOpenAI(
+        temperature=0,
+        api_key=getenv("AZURE_OPENAI_API_KEY"),
+        api_version=getenv("AZURE_OPENAI_API_VERSION"),
+        azure_endpoint=getenv("AZURE_OPENAI_ENDPOINT"),
+        model=getenv("AZURE_OPENAI_DEPLOYMENT_CHAT"),
+    )
 
 
 def get_embedding() -> Embeddings:
@@ -29,12 +36,15 @@ def get_retriever(
     embedding: Embeddings,
     collection_name: str,
     persist_directory: str,
+    k: int,
 ) -> VectorStoreRetriever:
     return Chroma(
         collection_name=collection_name,
         persist_directory=persist_directory,
         embedding_function=embedding,
-    ).as_retriever()
+    ).as_retriever(
+        search_kwargs={"k": k},
+    )
 
 
 def get_text_splitter() -> TextSplitter:
