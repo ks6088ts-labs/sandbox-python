@@ -1,4 +1,5 @@
 from enum import Enum
+from logging import getLogger
 from typing import Any, TypedDict
 
 from langchain_core.documents import Document
@@ -7,6 +8,8 @@ from langgraph.graph import END, StateGraph
 from sandbox_python.llms.chains.core import describe_image_chain, rag_chain
 from sandbox_python.llms.core import get_embedding, get_retriever
 from sandbox_python.llms.tools.bing_search import get_bing_search_tool
+
+logger = getLogger(__name__)
 
 
 class NodeType(Enum):
@@ -38,7 +41,7 @@ class GraphState(TypedDict):
 
 
 def retrieve(state: GraphState) -> dict[str, Any]:
-    print("---RETRIEVE---")
+    logger.info("---RETRIEVE---")
     question = state["question"]
     k = state["k"]
     try:
@@ -61,7 +64,7 @@ def retrieve(state: GraphState) -> dict[str, Any]:
 
 
 def search(state: GraphState) -> dict[str, Any]:
-    print("---SEARCH---")
+    logger.info("---SEARCH---")
     question = state["question"]
     documents = state["documents"]
     k = state["k"]
@@ -80,7 +83,7 @@ def search(state: GraphState) -> dict[str, Any]:
 
 
 def generate(state: GraphState) -> dict[str, Any]:
-    print("---GENERATE---")
+    logger.info("---GENERATE---")
     question = state["question"]
     documents = state["documents"]
 
@@ -89,7 +92,7 @@ def generate(state: GraphState) -> dict[str, Any]:
 
 
 def describe_image(state: GraphState) -> dict[str, Any]:
-    print("---DESCRIBE_IMAGE---")
+    logger.info("---DESCRIBE_IMAGE---")
     try:
         images = state["images"]
         documents = state["documents"]
