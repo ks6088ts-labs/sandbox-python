@@ -1,3 +1,4 @@
+import base64
 from pprint import pprint
 
 import streamlit as st
@@ -29,14 +30,32 @@ st.title("LangGraph")
 if not is_configured():
     st.warning("Please fill in the required fields at the sidebar.")
 
+uploaded_file = st.file_uploader(
+    "Upload an article",
+    type=(
+        "jpg",
+        "jpeg",
+        "png",
+        "gif",
+        "bmp",
+        "tiff",
+    ),
+)
+
 # Receive user input
 if prompt := st.chat_input(disabled=not is_configured()):
     st.chat_message("user").write(prompt)
+
+    images = None
+    if uploaded_file is not None:
+        encoded_image = base64.b64encode(uploaded_file.read()).decode("utf-8")
+        images = [encoded_image]
 
     for output in get_graph().stream(
         {
             "question": prompt,
             "k": int(k),
+            "images": images,
         },
         config={
             "configurable": {
