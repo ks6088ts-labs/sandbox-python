@@ -27,7 +27,7 @@ def create_vector_store(
     ],
     collection_name="rag-chroma",
     persist_directory="./.chroma",
-    verbose: bool = typer.Option(False, help="Verbose mode."),
+    verbose: bool = typer.Option(True, help="Verbose mode."),
 ):
     if verbose:
         import logging
@@ -55,7 +55,7 @@ def search(
     query: str = "天は人の上に人を造らず人の下に人を造らず",
     collection_name="rag-chroma",
     persist_directory="./.chroma",
-    k=3,
+    k: int = 3,
     verbose: bool = typer.Option(False, help="Verbose mode."),
 ):
     if verbose:
@@ -80,7 +80,7 @@ def search(
 @app.command()
 def bing_search(
     query: str = "GitHub",
-    k=3,
+    k: int = 3,
     verbose: bool = typer.Option(False, help="Verbose mode."),
 ):
     if verbose:
@@ -105,7 +105,7 @@ def rag(
     question="初版の発行日と出版社を教えてください。",
     vector_store=True,
     bing_search=True,
-    k=3,
+    k: int = 3,
     verbose: bool = typer.Option(False, help="Verbose mode."),
 ):
     if verbose:
@@ -151,8 +151,7 @@ def rag(
 @app.command()
 def agent(
     question="初版の発行日と出版社を教えてください。",
-    output_mermaid_png=None,
-    k=3,
+    k: int = 3,
     verbose: bool = typer.Option(False, help="Verbose mode."),
 ):
     if verbose:
@@ -160,10 +159,7 @@ def agent(
 
         logging.basicConfig(level=logging.DEBUG)
 
-    graph = get_graph()
-    graph.get_graph().draw_mermaid_png(output_file_path=output_mermaid_png)
-
-    for output in graph.stream(
+    for output in get_graph().stream(
         {
             "question": question,
             "k": k,
@@ -177,6 +173,19 @@ def agent(
         for key, value in output.items():
             pprint(f"Finished running: {key}:")
     pprint(value["generation"])
+
+
+@app.command()
+def create_mermaid_png(
+    output_mermaid_png: str = typer.Option("graph.png", help="Path to output mermaid png."),
+    verbose: bool = typer.Option(False, help="Verbose mode."),
+):
+    if verbose:
+        import logging
+
+        logging.basicConfig(level=logging.DEBUG)
+
+    get_graph().get_graph().draw_mermaid_png(output_file_path=output_mermaid_png)
 
 
 if __name__ == "__main__":
