@@ -31,3 +31,10 @@ $ func azure functionapp publish $FUNCTION_APP_NAME
 ```shell
 $ poetry run python -m streamlit run sandbox_python/streamlits/main.py
 ```
+
+## LangChain
+
+To support multimodal inputs, follow the instructions below:
+
+- [How to pass multimodal data directly to models](https://python.langchain.com/docs/how_to/multimodal_inputs/)
+- [How to use multimodal prompts](https://python.langchain.com/docs/how_to/multimodal_prompts/)

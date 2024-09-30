@@ -1,3 +1,4 @@
+import base64
 import os
 import sys
 from pprint import pprint
@@ -149,9 +150,10 @@ def rag(
 
 
 @app.command()
-def agent(
+def run_graph(
     question="初版の発行日と出版社を教えてください。",
-    k: int = 3,
+    k: int = 1,
+    image_file=None,  # specify image path to use image
     verbose: bool = typer.Option(False, help="Verbose mode."),
 ):
     if verbose:
@@ -159,10 +161,17 @@ def agent(
 
         logging.basicConfig(level=logging.DEBUG)
 
+    images = None
+    if image_file is not None:
+        with open(image_file, "rb") as f:
+            image_data = base64.b64encode(f.read()).decode("utf-8")
+            images = [image_data]
+
     for output in get_graph().stream(
         {
             "question": question,
             "k": k,
+            "images": images,
         },
         config={
             "configurable": {
