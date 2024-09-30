@@ -1,7 +1,7 @@
 import azure.functions as func
 from dotenv import load_dotenv
 
-from sandbox_python.azure_functions.core import app as fastapi_app
+from sandbox_python.fastapis.core import app as fastapi_app
 
 load_dotenv()
 
