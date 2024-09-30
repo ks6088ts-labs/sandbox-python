@@ -1,3 +1,5 @@
+import logging
+
 import streamlit as st
 from dotenv import load_dotenv
 
@@ -8,5 +10,6 @@ def main():
 
 
 if __name__ == "__main__":
+    logging.basicConfig(level=logging.DEBUG)
     load_dotenv()
     main()
