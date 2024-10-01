@@ -6,14 +6,17 @@ from pprint import pprint
 sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../")
 
 from logging import getLogger
+from os import getenv
 
 import typer
 from dotenv import load_dotenv
 from langchain_core.documents import Document
+from openai import AzureOpenAI
 
 from sandbox_python.llms import core
 from sandbox_python.llms.chains.core import rag_chain
 from sandbox_python.llms.graphs.core import get_graph
+from sandbox_python.llms.models.core import Joke
 from sandbox_python.llms.tools.bing_search import get_bing_search_tool
 
 app = typer.Typer()
@@ -195,6 +198,46 @@ def create_mermaid_png(
         logging.basicConfig(level=logging.DEBUG)
 
     get_graph().get_graph().draw_mermaid_png(output_file_path=output_mermaid_png)
+
+
+@app.command()
+def structured_output(
+    verbose: bool = typer.Option(False, help="Verbose mode."),
+):
+    if verbose:
+        import logging
+
+        logging.basicConfig(level=logging.DEBUG)
+    llm = core.get_chat_model()
+    structured_llm = llm.with_structured_output(Joke)
+    response: Joke = structured_llm.invoke("Tell me a joke")
+    print(response.model_dump_json())
+
+
+@app.command()
+def structured_output_raw(
+    verbose: bool = typer.Option(False, help="Verbose mode."),
+):
+    if verbose:
+        import logging
+
+        logging.basicConfig(level=logging.DEBUG)
+    client = AzureOpenAI(
+        api_key=getenv("AZURE_OPENAI_API_KEY"),
+        api_version=getenv("AZURE_OPENAI_API_VERSION"),
+        azure_endpoint=getenv("AZURE_OPENAI_ENDPOINT"),
+    )
+    completion = client.beta.chat.completions.parse(
+        model=getenv("AZURE_OPENAI_DEPLOYMENT_CHAT"),
+        messages=[
+            {"role": "user", "content": "Tell me a joke"},
+        ],
+        response_format=Joke,
+    )
+    event = completion.choices[0].message.parsed
+
+    print(event)
+    print(completion.model_dump_json(indent=2))
 
 
 if __name__ == "__main__":

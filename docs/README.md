@@ -34,6 +34,11 @@ $ poetry run python -m streamlit run sandbox_python/streamlits/main.py
 
 ## LangChain
 
+To return structured data from a model, follow the instructions below:
+
+- [MS Learn > Structured outputs](https://learn.microsoft.com/en-us/azure/ai-services/openai/how-to/structured-outputs?tabs=python)
+- [How to return structured data from a model](https://python.langchain.com/docs/how_to/structured_output/)
+
 To support multimodal inputs, follow the instructions below:
 
 - [How to pass multimodal data directly to models](https://python.langchain.com/docs/how_to/multimodal_inputs/)
