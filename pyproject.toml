@@ -16,6 +16,7 @@ azure-functions = "^1.21.0"
 streamlit = "^1.38.0"
 neo4j = "^5.25.0"
 langchain-experimental = "^0.3.2"
+onnxruntime-genai = "^0.4.0"
 
 [tool.poetry.group.dev.dependencies]
 pre-commit = "^3.8.0"
