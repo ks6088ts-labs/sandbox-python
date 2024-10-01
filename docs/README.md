@@ -71,3 +71,19 @@ MATCH (n1)-[r]->(n2) RETURN r, n1, n2 LIMIT 25
 - [Enhancing RAG-based application accuracy by constructing and leveraging knowledge graphs](https://blog.langchain.dev/enhancing-rag-based-applications-accuracy-by-constructing-and-leveraging-knowledge-graphs/)
 - [llm/enhancing_rag_with_graph.ipynb](https://github.com/tomasonjo/blogs/blob/master/llm/enhancing_rag_with_graph.ipynb?ref=blog.langchain.dev)
 - [LangChain Neo4j Integration](https://neo4j.com/labs/genai-ecosystem/langchain/)
+
+## ONNX runtime
+
+```shell
+# Download the model
+$ poetry run huggingface-cli download microsoft/Phi-3-mini-4k-instruct-onnx \
+    --include "cpu_and_mobile/cpu-int4-rtn-block-32-acc-level-4/*" \
+    --local-dir .onnx/
+
+# Run the model
+$ poetry run python scripts/slms_cli.py run-slm --verbose
+```
+
+### References
+
+- [microsoft/onnxruntime-genai](https://github.com/microsoft/onnxruntime-genai)

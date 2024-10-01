@@ -2500,6 +2500,31 @@ protobuf = "*"
 sympy = "*"
 
 [[package]]
+name = "onnxruntime-genai"
+version = "0.4.0"
+description = "ONNX Runtime generate() API"
+optional = false
+python-versions = "*"
+files = [
+    {file = "onnxruntime_genai-0.4.0-cp310-cp310-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:93247fb897659de7d4e429943ae9046db3bd99351bb125d6855fff6cb14cf6ea"},
+    {file = "onnxruntime_genai-0.4.0-cp310-cp310-win_amd64.whl", hash = "sha256:bfdc121393674bcd32232b9d542667a9ca9c4898cca5dc3b8d56bf7e4f030bdf"},
+    {file = "onnxruntime_genai-0.4.0-cp311-cp311-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:4d45f2db3082ab22ed71ff1f94cc4d85f9a799535afa4be2e21e8906e459696d"},
+    {file = "onnxruntime_genai-0.4.0-cp311-cp311-win_amd64.whl", hash = "sha256:2e4aadaa54edafe3c3ca70dbe04b74a9f3aac2c72c54cf73b0a99649732cc058"},
+    {file = "onnxruntime_genai-0.4.0-cp311-cp311-win_arm64.whl", hash = "sha256:6f38404a48ebb8cdc8b26fa0257127b0dafc1fe7244df366fb8b1edfbfd29815"},
+    {file = "onnxruntime_genai-0.4.0-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:1c3dfb49b654890a46e34464e0d5b483e8af897132783ecf4cc16837abf7a791"},
+    {file = "onnxruntime_genai-0.4.0-cp312-cp312-win_amd64.whl", hash = "sha256:064c540e119c39f9462035363a4b5b096ac4927777763e43090b92bf71d8a5e8"},
+    {file = "onnxruntime_genai-0.4.0-cp312-cp312-win_arm64.whl", hash = "sha256:ae29b17cad1835971d6dbbd6edfd9dcb7f7157abe8e8ee2a2d11e9facc339210"},
+    {file = "onnxruntime_genai-0.4.0-cp38-cp38-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:7828c9bfcd17ad21353fa7cca8101db8a4483b148eb2585df901774b607be035"},
+    {file = "onnxruntime_genai-0.4.0-cp38-cp38-win_amd64.whl", hash = "sha256:243f6ad4abaf8a2e71635ac6eea084f86b487e8d5b05cdc49acf4f5ede8ec202"},
+    {file = "onnxruntime_genai-0.4.0-cp39-cp39-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:f5dd567a4bbd5f44c297fbe50e3b58c4e73821d716e743b6b613421aa4c07761"},
+    {file = "onnxruntime_genai-0.4.0-cp39-cp39-win_amd64.whl", hash = "sha256:2809a4c60c5895832f613cc1c81890ec03634e887df5a2ce4b36499cb1b2bbf3"},
+]
+
+[package.dependencies]
+numpy = ">=1.21.6"
+onnxruntime = ">=1.19.0"
+
+[[package]]
 name = "openai"
 version = "1.50.2"
 description = "The official Python library for the openai API"
@@ -4925,4 +4950,4 @@ type = ["pytest-mypy"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "d6db30a094f5b6367ef4a04953ae3f60f226d42d31c880a9efc20f0ceab6cb20"
+content-hash = "b7483501c10db9948a53f27fac488ff4595a6ccc6ae32809cddc7e50d689cf7b"
