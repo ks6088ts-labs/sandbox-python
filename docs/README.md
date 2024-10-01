@@ -43,3 +43,31 @@ To support multimodal inputs, follow the instructions below:
 
 - [How to pass multimodal data directly to models](https://python.langchain.com/docs/how_to/multimodal_inputs/)
 - [How to use multimodal prompts](https://python.langchain.com/docs/how_to/multimodal_prompts/)
+
+## Graph RAG
+
+To create a knowledge graph database, follow the instructions below:
+
+```shell
+# Start the Neo4j database
+$ docker compose up
+
+# Create indexes and constraints
+$ poetry run python scripts/llms_cli.py create-knowledge-graph --verbose
+```
+
+After creating the knowledge graph, access the Neo4j browser at `http://localhost:7474` and you can query it using the following command:
+
+```
+// Get some data
+MATCH (n1)-[r]->(n2) RETURN r, n1, n2 LIMIT 25
+```
+
+![Graph RAG](./images/visualize_graph_database.png)
+
+### References
+
+- [LangChain > Neo4j](https://python.langchain.com/docs/integrations/providers/neo4j/)
+- [Enhancing RAG-based application accuracy by constructing and leveraging knowledge graphs](https://blog.langchain.dev/enhancing-rag-based-applications-accuracy-by-constructing-and-leveraging-knowledge-graphs/)
+- [llm/enhancing_rag_with_graph.ipynb](https://github.com/tomasonjo/blogs/blob/master/llm/enhancing_rag_with_graph.ipynb?ref=blog.langchain.dev)
+- [LangChain Neo4j Integration](https://neo4j.com/labs/genai-ecosystem/langchain/)

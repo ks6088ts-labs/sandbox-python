@@ -163,3 +163,4 @@ cython_debug/
 *.env
 requirements.txt
 .chroma
+.neo4j

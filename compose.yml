@@ -1,0 +1,13 @@
+services:
+  neo4j:
+    image: neo4j:5.23.0
+    container_name: neo4j
+    ports:
+      - 7474:7474
+      - 7687:7687
+    environment:
+      NEO4J_AUTH: neo4j/password
+      # https://github.com/amundsen-io/amundsen/discussions/1801#discussioncomment-3189454
+      NEO4JLABS_PLUGINS: '["apoc"]'
+    volumes:
+      - .neo4j/data:/data

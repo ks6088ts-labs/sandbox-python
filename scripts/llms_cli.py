@@ -5,12 +5,15 @@ from pprint import pprint
 
 sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../")
 
+import logging
 from logging import getLogger
 from os import getenv
 
 import typer
 from dotenv import load_dotenv
+from langchain_community.graphs import Neo4jGraph
 from langchain_core.documents import Document
+from langchain_experimental.graph_transformers import LLMGraphTransformer
 from openai import AzureOpenAI
 
 from sandbox_python.llms import core
@@ -23,12 +26,14 @@ app = typer.Typer()
 
 logger = getLogger(__name__)
 
+DEFAULT_URLS = [
+    "https://www.aozora.gr.jp/cards/000296/files/47061_29420.html",  # 学問のすすめ
+]
+
 
 @app.command()
 def create_vector_store(
-    urls: list[str] = [
-        "https://www.aozora.gr.jp/cards/000296/files/47061_29420.html",  # 学問のすすめ
-    ],
+    urls: list[str] = DEFAULT_URLS,
     collection_name="rag-chroma",
     persist_directory="./.chroma",
     verbose: bool = typer.Option(True, help="Verbose mode."),
@@ -238,6 +243,41 @@ def structured_output_raw(
 
     print(event)
     print(completion.model_dump_json(indent=2))
+
+
+@app.command()
+def create_knowledge_graph(
+    urls: list[str] = DEFAULT_URLS,
+    url="bolt://localhost:7687",
+    username="neo4j",
+    password="password",
+    verbose: bool = typer.Option(False, help="Verbose mode."),
+):
+    if verbose:
+        logging.basicConfig(level=logging.DEBUG)
+
+    # Get chunked documents
+    documents = core.get_text_splitter().split_documents(
+        core.get_documents(
+            urls=urls,
+        )
+    )
+    # FIXME: Limit to 20 documents for now since it takes too long
+    documents = documents[:20]
+
+    # Extract graph data (heavy operation)
+    graph_documents = LLMGraphTransformer(llm=core.get_chat_model()).convert_to_graph_documents(documents)
+
+    # Store to neo4j
+    Neo4jGraph(
+        url=url,
+        username=username,
+        password=password,
+    ).add_graph_documents(
+        graph_documents,
+        baseEntityLabel=True,
+        include_source=True,
+    )
 
 
 if __name__ == "__main__":
