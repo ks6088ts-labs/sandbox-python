@@ -87,3 +87,62 @@ $ poetry run python scripts/slms_cli.py run-slm --verbose
 ### References
 
 - [microsoft/onnxruntime-genai](https://github.com/microsoft/onnxruntime-genai)
+
+## Profiler
+
+### [line_profiler](https://github.com/pyutils/line_profiler): Line-by-line profiling for Python
+
+```shell
+$ LINE_PROFILE=1 poetry run python -m memory_profiler scripts/llms_cli.py create-mermaid-png-memory
+USER_AGENT environment variable not set, consider setting it to identify your requests.
+Filename: scripts/llms_cli.py
+
+Line #    Mem usage    Increment  Occurrences   Line Contents
+=============================================================
+   216    140.1 MiB    140.1 MiB           1   @app.command()
+   217                                         @memory_profile
+   218                                         def create_mermaid_png_memory(
+   219                                             output_mermaid_png: str = typer.Option("graph.png", help="Path to output mermaid png."),
+   220                                             verbose: bool = typer.Option(False, help="Verbose mode."),
+   221                                         ):
+   222    140.1 MiB      0.0 MiB           1       if verbose:
+   223                                                 import logging
+   224
+   225                                                 logging.basicConfig(level=logging.DEBUG)
+   226
+   227    140.4 MiB      0.3 MiB           1       get_graph().get_graph().draw_mermaid_png(output_file_path=output_mermaid_png)
+
+
+Timer unit: 1e-09 s
+
+Wrote profile results to profile_output.txt
+Wrote profile results to profile_output_2024-10-21T102700.txt
+Wrote profile results to profile_output.lprof
+To view details run:
+python -m line_profiler -rtmz profile_output.lprof
+
+$ poetry run python -m line_profiler -rtmz profile_output.lprof
+```
+
+### [memory_profiler](https://github.com/pythonprofilers/memory_profiler): Monitor Memory usage of Python code
+
+```shell
+$ poetry run python -m memory_profiler scripts/llms_cli.py create-mermaid-png-memory
+USER_AGENT environment variable not set, consider setting it to identify your requests.
+Filename: scripts/llms_cli.py
+
+Line #    Mem usage    Increment  Occurrences   Line Contents
+=============================================================
+   216    140.0 MiB    140.0 MiB           1   @app.command()
+   217                                         @memory_profile
+   218                                         def create_mermaid_png_memory(
+   219                                             output_mermaid_png: str = typer.Option("graph.png", help="Path to output mermaid png."),
+   220                                             verbose: bool = typer.Option(False, help="Verbose mode."),
+   221                                         ):
+   222    140.0 MiB      0.0 MiB           1       if verbose:
+   223                                                 import logging
+   224
+   225                                                 logging.basicConfig(level=logging.DEBUG)
+   226
+   227    140.3 MiB      0.3 MiB           1       get_graph().get_graph().draw_mermaid_png(output_file_path=output_mermaid_png)
+```

@@ -165,3 +165,6 @@ requirements.txt
 .chroma
 .neo4j
 .onnx
+profile_output*.txt
+profile_output*.lprof
+graph.png

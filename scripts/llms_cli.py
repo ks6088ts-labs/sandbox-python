@@ -1,20 +1,21 @@
 import base64
+import logging
 import os
 import sys
-from pprint import pprint
-
-sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../")
-
-import logging
 from logging import getLogger
 from os import getenv
+from pprint import pprint
 
 import typer
 from dotenv import load_dotenv
 from langchain_community.graphs import Neo4jGraph
 from langchain_core.documents import Document
 from langchain_experimental.graph_transformers import LLMGraphTransformer
+from line_profiler import profile as line_profile
+from memory_profiler import profile as memory_profile
 from openai import AzureOpenAI
+
+sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../")
 
 from sandbox_python.llms import core
 from sandbox_python.llms.chains.core import rag_chain
@@ -32,6 +33,7 @@ DEFAULT_URLS = [
 
 
 @app.command()
+@line_profile
 def create_vector_store(
     urls: list[str] = DEFAULT_URLS,
     collection_name="rag-chroma",
@@ -60,6 +62,7 @@ def create_vector_store(
 
 
 @app.command()
+@line_profile
 def search(
     query: str = "天は人の上に人を造らず人の下に人を造らず",
     collection_name="rag-chroma",
@@ -87,6 +90,7 @@ def search(
 
 
 @app.command()
+@line_profile
 def bing_search(
     query: str = "GitHub",
     k: int = 3,
@@ -110,6 +114,7 @@ def bing_search(
 
 
 @app.command()
+@line_profile
 def rag(
     question="初版の発行日と出版社を教えてください。",
     vector_store=True,
@@ -158,6 +163,7 @@ def rag(
 
 
 @app.command()
+@line_profile
 def run_graph(
     question="初版の発行日と出版社を教えてください。",
     k: int = 1,
@@ -193,6 +199,7 @@ def run_graph(
 
 
 @app.command()
+@line_profile
 def create_mermaid_png(
     output_mermaid_png: str = typer.Option("graph.png", help="Path to output mermaid png."),
     verbose: bool = typer.Option(False, help="Verbose mode."),
@@ -205,7 +212,23 @@ def create_mermaid_png(
     get_graph().get_graph().draw_mermaid_png(output_file_path=output_mermaid_png)
 
 
+# https://stackoverflow.com/questions/66193550/is-it-possible-to-run-memory-profiler-and-line-profiler-during-the-same-executio
 @app.command()
+@memory_profile
+def create_mermaid_png_memory(
+    output_mermaid_png: str = typer.Option("graph.png", help="Path to output mermaid png."),
+    verbose: bool = typer.Option(False, help="Verbose mode."),
+):
+    if verbose:
+        import logging
+
+        logging.basicConfig(level=logging.DEBUG)
+
+    get_graph().get_graph().draw_mermaid_png(output_file_path=output_mermaid_png)
+
+
+@app.command()
+@line_profile
 def structured_output(
     verbose: bool = typer.Option(False, help="Verbose mode."),
 ):
@@ -220,6 +243,7 @@ def structured_output(
 
 
 @app.command()
+@line_profile
 def structured_output_raw(
     verbose: bool = typer.Option(False, help="Verbose mode."),
 ):
@@ -246,6 +270,7 @@ def structured_output_raw(
 
 
 @app.command()
+@line_profile
 def create_knowledge_graph(
     urls: list[str] = DEFAULT_URLS,
     url="bolt://localhost:7687",

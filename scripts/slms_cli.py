@@ -1,13 +1,12 @@
+import logging
 import os
 import sys
-
-sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../")
-
-import logging
 from logging import getLogger
 
 import typer
 from dotenv import load_dotenv
+
+sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../")
 
 from sandbox_python.slms.core import SlmClient
 
