@@ -52,3 +52,29 @@ To publish the docker image to Docker Hub, you need to set the following secrets
 gh secret set DOCKERHUB_USERNAME --body $DOCKERHUB_USERNAME
 gh secret set DOCKERHUB_TOKEN --body $DOCKERHUB_TOKEN
 ```
+
+## scripts
+
+### pdf_cli.py
+
+```shell
+# help
+poetry run python scripts/pdf_cli.py --help
+
+# Convert a PDF file to a Markdown file.
+poetry run python scripts/pdf_cli.py pdf2md \
+    --in-pdf "./datasets/sample.pdf" \
+    --out-md "./datasets/sample.md" \
+    --verbose
+
+# Dump the table of contents (TOC) of a PDF file.
+poetry run python scripts/pdf_cli.py toc \
+    --in-pdf "./datasets/sample.pdf" \
+    --verbose
+
+# Dump tables of the specified page of a PDF file.
+poetry run python scripts/pdf_cli.py tables \
+    --in-pdf "./datasets/sample.pdf" \
+    --page-number 123 \
+    --verbose
+```
